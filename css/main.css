@@ -1168,7 +1168,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #81e349;
+  background: #05ff24;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -2441,6 +2441,7 @@ ul.breadcrumb li + li:last-child {
 }
 body {
   background-image: url("/images/background.jpg");
+  background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
   color: var(--text-color);
@@ -2449,7 +2450,7 @@ body {
   line-height: 2;
 }
 .header-inner {
-  opacity: 0.85;
+  opacity: 0.8;
 }
 .sidebar {
   transition-duration: 0.4s;
@@ -2457,25 +2458,27 @@ body {
 }
 .content-wrap {
   padding-top: 15px;
-  opacity: 0.8;
+  opacity: 0.7;
 }
 .header-inner {
-  border-radius: 15px 15px 15px 15px;
-  opacity: 0.85;
+  border-radius: 10px 10px 10px 10px;
+  opacity: 0.9;
 }
 .sidebar {
   transition-duration: 0.4s;
-  opacity: 0.85;
-  border-radius: 15px 15px 15px 15px;
+  opacity: 0.9;
+  border-radius: 10px 10px 10px 10px;
 }
 .sidebar-inner {
-  background-image: url("/images/river.png");
+  background-image: url("/images/river_small.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
   border-radius: 10px 10px 10px 10px;
   box-shadow: 0 2px 2px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.06), 0 1px 5px 0 rgba(0,0,0,0.12), 0 -1px 0.5px 0 rgba(0,0,0,0.09);
   box-sizing: border-box;
   color: var(--text-color);
   width: 240px;
-  opacity: 0;
+  opacity: 0.9;
 }
 .post-block {
   background: var(--content-bg-color);
