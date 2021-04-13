@@ -4,16 +4,16 @@
   
     
     <entry>
-      <title>数据结构——图</title>
-      <link href="2021/04/12/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E2%80%94%E2%80%94%E5%9B%BE/"/>
-      <url>2021/04/12/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E2%80%94%E2%80%94%E5%9B%BE/</url>
+      <title>查找——二叉树查找</title>
+      <link href="2021/04/13/%E6%9F%A5%E6%89%BE%E2%80%94%E2%80%94%E4%BA%8C%E5%8F%89%E6%A0%91%E6%9F%A5%E6%89%BE/"/>
+      <url>2021/04/13/%E6%9F%A5%E6%89%BE%E2%80%94%E2%80%94%E4%BA%8C%E5%8F%89%E6%A0%91%E6%9F%A5%E6%89%BE/</url>
       
-        <content type="html"><![CDATA[]]></content>
+        <content type="html"><![CDATA[<h1 id="二叉树查找"><a href="#二叉树查找" class="headerlink" title="二叉树查找"></a>二叉树查找</h1>]]></content>
       
       
       <categories>
           
-          <category> 数据结构 </category>
+          <category> 数据结构与算法——算法 </category>
           
       </categories>
       
@@ -23,16 +23,16 @@
     
     
     <entry>
-      <title>数据结构——树</title>
-      <link href="2021/04/12/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E2%80%94%E2%80%94%E6%A0%91/"/>
-      <url>2021/04/12/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E2%80%94%E2%80%94%E6%A0%91/</url>
+      <title>查找——线性索引查找</title>
+      <link href="2021/04/13/%E6%9F%A5%E6%89%BE%E2%80%94%E2%80%94%E7%BA%BF%E6%80%A7%E7%B4%A2%E5%BC%95%E6%9F%A5%E6%89%BE/"/>
+      <url>2021/04/13/%E6%9F%A5%E6%89%BE%E2%80%94%E2%80%94%E7%BA%BF%E6%80%A7%E7%B4%A2%E5%BC%95%E6%9F%A5%E6%89%BE/</url>
       
-        <content type="html"><![CDATA[]]></content>
+        <content type="html"><![CDATA[<h1 id="线性索引查找"><a href="#线性索引查找" class="headerlink" title="线性索引查找"></a>线性索引查找</h1><h2 id="1、稠密索引"><a href="#1、稠密索引" class="headerlink" title="1、稠密索引"></a>1、稠密索引</h2>]]></content>
       
       
       <categories>
           
-          <category> 数据结构 </category>
+          <category> 数据结构与算法——算法 </category>
           
       </categories>
       
@@ -42,38 +42,25 @@
     
     
     <entry>
-      <title>test</title>
-      <link href="2021/04/10/test/"/>
-      <url>2021/04/10/test/</url>
+      <title>查找——有序表查找</title>
+      <link href="2021/04/13/%E6%9F%A5%E6%89%BE%E2%80%94%E2%80%94%E6%9C%89%E5%BA%8F%E8%A1%A8%E6%9F%A5%E6%89%BE/"/>
+      <url>2021/04/13/%E6%9F%A5%E6%89%BE%E2%80%94%E2%80%94%E6%9C%89%E5%BA%8F%E8%A1%A8%E6%9F%A5%E6%89%BE/</url>
       
-        <content type="html"><![CDATA[<h1 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h1><h2 id="测试-1"><a href="#测试-1" class="headerlink" title="测试"></a>测试</h2><h1 id="测试-2"><a href="#测试-2" class="headerlink" title="测试"></a>测试</h1><h2 id="测试-3"><a href="#测试-3" class="headerlink" title="测试"></a>测试</h2>]]></content>
+        <content type="html"><![CDATA[<h1 id="有序表查找"><a href="#有序表查找" class="headerlink" title="有序表查找"></a>有序表查找</h1><h2 id="1、二分查找"><a href="#1、二分查找" class="headerlink" title="1、二分查找"></a>1、二分查找</h2><p>二分查找又称为折半查找，</p>]]></content>
       
       
       <categories>
           
-          <category> 分类测试 </category>
+          <category> 数据结构与算法——算法 </category>
           
       </categories>
       
       
         <tags>
             
-            <tag> 标签测试 </tag>
+            <tag> 算法 </tag>
             
         </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>My first github blog</title>
-      <link href="2021/04/09/My-first-github-blog/"/>
-      <url>2021/04/09/My-first-github-blog/</url>
-      
-        <content type="html"><![CDATA[<h1 id="Chinese-Poems"><a href="#Chinese-Poems" class="headerlink" title="Chinese Poems"></a>Chinese Poems</h1><h2 id="Section-1"><a href="#Section-1" class="headerlink" title="Section 1"></a>Section 1</h2><p>故人西辞黄鹤楼，烟花三月下扬州。<br>孤帆远影碧空尽，唯见长江天际流。</p><h2 id="Section-2"><a href="#Section-2" class="headerlink" title="Section 2"></a>Section 2</h2><p>好雨知时节，当春乃发生<br>随风潜入夜，润物细无声。<br>野径云俱黑，江船火独明。<br>晓看红湿处，花重锦官城。</p><h2 id="Section-3"><a href="#Section-3" class="headerlink" title="Section 3"></a>Section 3</h2><p>2021-4-9<br>END</p>]]></content>
-      
-      
       
     </entry>
     
