@@ -23,12 +23,18 @@
     
     
     <entry>
-      <title>“排序”</title>
+      <title>排序</title>
       <link href="2021/04/24/%E6%8E%92%E5%BA%8F/"/>
       <url>2021/04/24/%E6%8E%92%E5%BA%8F/</url>
       
         <content type="html"><![CDATA[]]></content>
       
+      
+      <categories>
+          
+          <category> 数据结构与算法——算法 </category>
+          
+      </categories>
       
       
     </entry>
