@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="有些情况下，我们需要实现不规则窗口，比如在软件的加载窗口，可以使用背景透明的图片填充窗口，从而创建炫酷的不规则窗口。下面介绍使用背景透明图片设计不规则窗口以及实现鼠标拖拽不规则窗口的方法。首先，我们需要创建一个C++类（），这个类继承于QWidget（当然也可以使用设计师界面类，具体看个人需求），接下来的代码均是基于这个派生类。 1、设置窗口无边框且背景透明首先，设置窗口的属性：12345678M">
+<meta property="og:type" content="article">
+<meta property="og:title" content="QT不规则窗口的移动原理和证明">
+<meta property="og:url" content="http://example.com/2021/04/24/QT%E4%B8%8D%E8%A7%84%E5%88%99%E7%AA%97%E5%8F%A3%E7%9A%84%E7%A7%BB%E5%8A%A8%E5%8E%9F%E7%90%86%E5%92%8C%E8%AF%81%E6%98%8E/index.html">
+<meta property="og:site_name" content="小Jia同学的博客">
+<meta property="og:description" content="有些情况下，我们需要实现不规则窗口，比如在软件的加载窗口，可以使用背景透明的图片填充窗口，从而创建炫酷的不规则窗口。下面介绍使用背景透明图片设计不规则窗口以及实现鼠标拖拽不规则窗口的方法。首先，我们需要创建一个C++类（），这个类继承于QWidget（当然也可以使用设计师界面类，具体看个人需求），接下来的代码均是基于这个派生类。 1、设置窗口无边框且背景透明首先，设置窗口的属性：12345678M">
+<meta property="og:locale">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210424104327518.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTUxMTE4OQ==,size_16,color_FFFFFF,t_70#pic_center">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210424105140977.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTUxMTE4OQ==,size_16,color_FFFFFF,t_70#pic_center">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210424111351874.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTUxMTE4OQ==,size_16,color_FFFFFF,t_70#pic_center">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210424112710333.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTUxMTE4OQ==,size_16,color_FFFFFF,t_70#pic_center">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210424112915825.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTUxMTE4OQ==,size_16,color_FFFFFF,t_70#pic_center">
+<meta property="article:published_time" content="2021-04-24T03:46:25.000Z">
+<meta property="article:modified_time" content="2021-04-24T06:15:58.851Z">
+<meta property="article:author" content="Jia Qiang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20210424104327518.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTUxMTE4OQ==,size_16,color_FFFFFF,t_70#pic_center">
+
+<link rel="canonical" href="http://example.com/2021/04/24/QT%E4%B8%8D%E8%A7%84%E5%88%99%E7%AA%97%E5%8F%A3%E7%9A%84%E7%A7%BB%E5%8A%A8%E5%8E%9F%E7%90%86%E5%92%8C%E8%AF%81%E6%98%8E/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>QT不规则窗口的移动原理和证明 | 小Jia同学的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">小Jia同学的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">风光正好，与君同赏</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">7</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">4</span></a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">1</span></a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-commonweal">
+
+    <a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益 404</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/04/24/QT%E4%B8%8D%E8%A7%84%E5%88%99%E7%AA%97%E5%8F%A3%E7%9A%84%E7%A7%BB%E5%8A%A8%E5%8E%9F%E7%90%86%E5%92%8C%E8%AF%81%E6%98%8E/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jia Qiang">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小Jia同学的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          QT不规则窗口的移动原理和证明
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-04-24 11:46:25 / 修改时间：14:15:58" itemprop="dateCreated datePublished" datetime="2021-04-24T11:46:25+08:00">2021-04-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/QT/" itemprop="url" rel="index"><span itemprop="name">QT</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>有些情况下，我们需要实现不规则窗口，比如在软件的加载窗口，可以使用背景透明的图片填充窗口，从而创建炫酷的不规则窗口。下面介绍使用背景透明图片设计不规则窗口以及实现鼠标拖拽不规则窗口的方法。<br>首先，我们需要创建一个C++类（），这个类继承于QWidget（当然也可以使用设计师界面类，具体看个人需求），接下来的代码均是基于这个派生类。</p>
+<h1 id="1、设置窗口无边框且背景透明"><a href="#1、设置窗口无边框且背景透明" class="headerlink" title="1、设置窗口无边框且背景透明"></a>1、设置窗口无边框且背景透明</h1><p>首先，设置窗口的属性：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">MyWidget::<span class="built_in">MyWidget</span>(QWidget *parent)</span><br><span class="line">    : <span class="built_in">QWidget</span>(parent)</span><br><span class="line">{</span><br><span class="line">    <span class="comment">//设置窗口风格为无边框</span></span><br><span class="line">    <span class="keyword">this</span>-&gt;<span class="built_in">setWindowFlag</span>(Qt::FramelessWindowHint);</span><br><span class="line">    <span class="comment">//设置背景为透明()</span></span><br><span class="line">    <span class="keyword">this</span>-&gt;<span class="built_in">setAttribute</span>(Qt::WA_TranslucentBackground);</span><br><span class="line">}</span><br></pre></td></tr></table></figure></p>
+<h1 id="2、使用背景透明图片填充窗口"><a href="#2、使用背景透明图片填充窗口" class="headerlink" title="2、使用背景透明图片填充窗口"></a>2、使用背景透明图片填充窗口</h1><p>首先，需要重写QPaintEvent()事件，用于绘制窗口背景，将其写在类的保护成员里：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//声明（mywidget.h中）</span></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="comment">//绘图事件</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">paintEvent</span><span class="params">(QPaintEvent*)</span></span>;</span><br></pre></td></tr></table></figure><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//定义（mywidget.cpp中）</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">MyWidget::paintEvent</span><span class="params">(QPaintEvent* )</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">    <span class="function">QPainter <span class="title">p</span><span class="params">(<span class="keyword">this</span>)</span></span>;</span><br><span class="line">    p.<span class="built_in">drawPixmap</span>(<span class="number">0</span>,<span class="number">0</span>,<span class="keyword">this</span>-&gt;<span class="built_in">width</span>(),<span class="keyword">this</span>-&gt;<span class="built_in">height</span>(),<span class="built_in">QPixmap</span>(<span class="string">"E:\image\sunny.png"</span>));</span><br><span class="line">}</span><br></pre></td></tr></table></figure><br>其中，图片sunny.png是一张背景透明的图片而不是说图片的背景为白色。如下图所示：<br><img src="https://img-blog.csdnimg.cn/20210424104327518.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTUxMTE4OQ==,size_16,color_FFFFFF,t_70#pic_center" alt="背景透明说明"><br>而我们使用<br>QWidget::setAttribute(Qt::WA_TranslucentBackground);<br>设置窗口为背景透明则指的是窗口开启了阿尔法通达，关于Qt::WA_TranslucentBackground属性，QT文档的官方文档的说明如下：  </p>
+<hr>
+<p><strong>Qt::WA_TranslucentBackground  120</strong><br>Indicates that the widget should have a translucent background, i.e., any non-opaque regions of the widgets will be translucent because the widget will have an alpha channel. Setting this flag causes WA_NoSystemBackground to be set. On Windows the widget also needs the Qt::FramelessWindowHint window flag to be set. This flag is set or cleared by the widget’s author.  </p>
+<hr>
+<p>到目前为止，我们已经完成了不规则窗口的创建，运行程序可以看到，显示效果如下所示：<br><img src="https://img-blog.csdnimg.cn/20210424105140977.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTUxMTE4OQ==,size_16,color_FFFFFF,t_70#pic_center" alt=""><br>但是此时的窗口还无法拖动，接下来从数学上证明如何拖动窗口，并给出现相关代码。</p>
+<h1 id="3、鼠标按下拖拽不规则窗口证明"><a href="#3、鼠标按下拖拽不规则窗口证明" class="headerlink" title="3、鼠标按下拖拽不规则窗口证明"></a>3、鼠标按下拖拽不规则窗口证明</h1><p>上面的窗口已经做到了无边框且背景透明，但是正是由于无边框，我们无法拖动也无法关闭它（除非在任务栏右键关闭），下面通过重写鼠标按下事件使得窗口可拖动。先说明证明窗口拖动的原理。  </p>
+<h2 id="3-1-鼠标移动与鼠标追踪"><a href="#3-1-鼠标移动与鼠标追踪" class="headerlink" title="3.1 鼠标移动与鼠标追踪"></a>3.1 鼠标移动与鼠标追踪</h2><p>鼠标追踪是<strong>相对于mouseMoveEvent()所属的父组件</strong>而言，比如我们在MyWidget中声明了一个鼠标移动事件MyWidget::mouseMoveEvent()，那么鼠标追踪就是指的当鼠标移动进此窗口时，是否会被追踪。<br><strong>关闭鼠标追踪：</strong> 鼠标如果没有按下，则在MyWidget移动时不会触发鼠标点击事件（即不会调用mouseMoveEvent()），鼠标追踪是默认关闭的。<br><strong>开启鼠标追踪：</strong> 鼠标只要在窗口内移动，就会触发鼠标移动事件。<br>开启方式是在窗口的构造函数中使QWidget::setMouseTracking()参数为true，即：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//关闭鼠标追踪</span></span><br><span class="line"><span class="keyword">this</span>-&gt;<span class="built_in">setMouseTracking</span>(<span class="literal">false</span>);</span><br><span class="line"><span class="comment">//开启鼠标追踪</span></span><br><span class="line"><span class="keyword">this</span>-&gt;<span class="built_in">setMouseTracking</span>(<span class="literal">true</span>);</span><br></pre></td></tr></table></figure><br>如果开启了鼠标追踪，则只要鼠标在窗口内移动，就会触发mouseMoveEvent()，而我们希望只是在鼠标按下的时候才触发鼠标移动事件，因此我们选择将此窗口的鼠标追踪关闭：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//关闭鼠标追踪</span></span><br><span class="line"><span class="keyword">this</span>-&gt;<span class="built_in">setMouseTracking</span>(<span class="literal">false</span>);</span><br></pre></td></tr></table></figure></p>
+<h2 id="3-2-窗口移动原理以证明"><a href="#3-2-窗口移动原理以证明" class="headerlink" title="3.2 窗口移动原理以证明"></a>3.2 窗口移动原理以证明</h2><p>对于桌面系统，其坐标系如下图所示：<br><img src="https://img-blog.csdnimg.cn/20210424111351874.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTUxMTE4OQ==,size_16,color_FFFFFF,t_70#pic_center" alt=""><br>上图中，绿色区域表示电脑桌面，蓝色区域表示被背景透明的图片填充的窗口，A点为鼠标按下的点，B点为鼠标按下并移动后的点（注意<strong>A点相对于窗口的位置是没有的变的，鼠标从A点移动到B指的是相对桌面从A点移动到B点</strong>）。<br>我们不设置鼠标追踪，保证只有在鼠标按下的时候移动才会触发鼠标移动事件。<br>首先在鼠标按下事件mousePressEvent()中获取到鼠标按下位置相对于窗口左上角的位置A：QPoint mousePositon<br>假设鼠标按下后移动到桌面B点，那么我们需要做的是将原窗口从相对桌面的A点移动到相对桌面的B点。而要移动窗口，需要一个函数：<br><strong>QWidget::move(QPoint newPosition)</strong><br>这个函数的作用是：<strong>以窗口的左上角顶点</strong>坐标为参考点，将窗口移动到newPositon点，move()函数使用的坐标系统是桌面坐标系，即全局坐标系。<br>所以我们需要将鼠标的位置量转换为窗口左上角顶点的位移。<br>下面做一个推导：<br>我们可以使用向量来证明窗口的移动原理，如下图所示：<br><img src="https://img-blog.csdnimg.cn/20210424112710333.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTUxMTE4OQ==,size_16,color_FFFFFF,t_70#pic_center" alt=""><br>其中，O(0,0)为电脑桌面零点，W1为鼠标在A点时的窗口左上角全局坐标，W2为鼠标在B点时的窗口左上角全局坐标，A为鼠标位于点A时的全局坐标，B为鼠标位于B点时全局坐标，则move()函数需要的量为W2的坐标，下满进行推导：<br>由于<strong>鼠标按下的点相对窗口的位置不变</strong>，所以W和A的相对位置不会变，即：<br><img src="https://img-blog.csdnimg.cn/20210424112915825.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTUxMTE4OQ==,size_16,color_FFFFFF,t_70#pic_center" alt=""></p>
+<p>由于O点的坐标坐标为(0,0)，W1点的局部坐标为(0,0)，所以上式表明：<br><strong>窗口新位置的全局坐标W2=鼠标新位置的全局坐标B – 鼠标原位置的全局坐标A</strong><br>至此，已经说明了如何进行窗口移动。</p>
+<h1 id="4、完整代码"><a href="#4、完整代码" class="headerlink" title="4、完整代码"></a>4、完整代码</h1><p>下面附上完整代码，供大家参考：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//main()函数</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"mywidget.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;QApplication&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">    <span class="function">QApplication <span class="title">a</span><span class="params">(argc, argv)</span></span>;</span><br><span class="line">    MyWidget w;</span><br><span class="line">    w.<span class="built_in">show</span>();</span><br><span class="line">    <span class="keyword">return</span> a.<span class="built_in">exec</span>();</span><br><span class="line">}</span><br></pre></td></tr></table></figure><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//mywidget.h 头文件</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> MYWIDGET_H</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MYWIDGET_H</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;QWidget&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyWidget</span> :</span> <span class="keyword">public</span> QWidget</span><br><span class="line">{</span><br><span class="line">    Q_OBJECT</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">MyWidget</span>(QWidget *parent = <span class="literal">nullptr</span>);</span><br><span class="line">    ~<span class="built_in">MyWidget</span>();</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line"></span><br><span class="line">    <span class="comment">//绘图事件</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">paintEvent</span><span class="params">(QPaintEvent*)</span></span>;</span><br><span class="line">    <span class="comment">//鼠标按下事件</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">mousePressEvent</span><span class="params">(QMouseEvent* e)</span></span>;</span><br><span class="line">    <span class="comment">//鼠标移动事件</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">mouseMoveEvent</span><span class="params">(QMouseEvent* e)</span></span>;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    QPoint mouseLocalPos;</span><br><span class="line">};</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span> <span class="comment">// MYWIDGET_H</span></span></span><br></pre></td></tr></table></figure><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//mywidget.cpp 源文件</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"mywidget.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;QPainter&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;QPixmap&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;QMouseEvent&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;QDebug&gt;</span></span></span><br><span class="line"></span><br><span class="line">MyWidget::<span class="built_in">MyWidget</span>(QWidget *parent)</span><br><span class="line">    : <span class="built_in">QWidget</span>(parent)</span><br><span class="line">{</span><br><span class="line">    <span class="keyword">this</span>-&gt;<span class="built_in">setWindowFlag</span>(Qt::FramelessWindowHint);</span><br><span class="line">    <span class="comment">//设置背景为透明</span></span><br><span class="line">    <span class="keyword">this</span>-&gt;<span class="built_in">setAttribute</span>(Qt::WA_TranslucentBackground);</span><br><span class="line">    <span class="comment">//关闭鼠标追踪（默认为关闭）</span></span><br><span class="line">    <span class="keyword">this</span>-&gt;<span class="built_in">setMouseTracking</span>(<span class="literal">false</span>);</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line">MyWidget::~<span class="built_in">MyWidget</span>()</span><br><span class="line">{</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">MyWidget::paintEvent</span><span class="params">(QPaintEvent* )</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">    <span class="function">QPainter <span class="title">p</span><span class="params">(<span class="keyword">this</span>)</span></span>;</span><br><span class="line">    p.<span class="built_in">drawPixmap</span>(<span class="number">0</span>,<span class="number">0</span>,<span class="keyword">this</span>-&gt;<span class="built_in">width</span>(),<span class="keyword">this</span>-&gt;<span class="built_in">height</span>(),<span class="built_in">QPixmap</span>(<span class="string">"E:/image/sunny.png"</span>));</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">MyWidget::mousePressEvent</span><span class="params">(QMouseEvent* e)</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">    <span class="comment">//如果是右键，关闭窗口</span></span><br><span class="line">    <span class="keyword">if</span>(e-&gt;<span class="built_in">button</span>()==Qt::RightButton)</span><br><span class="line">    {</span><br><span class="line">        <span class="keyword">this</span>-&gt;<span class="built_in">close</span>();</span><br><span class="line">    }</span><br><span class="line">    <span class="comment">//如果是左键，拖动窗口</span></span><br><span class="line">    <span class="keyword">if</span>(e-&gt;<span class="built_in">button</span>()==Qt::LeftButton)</span><br><span class="line">    {</span><br><span class="line">        <span class="comment">//求坐标差值</span></span><br><span class="line">        <span class="comment">//鼠标相对窗口左上角的位置=当前坐标（相对屏幕）-窗口左上角坐标（相对屏幕）</span></span><br><span class="line">        mouseLocalPos=e-&gt;<span class="built_in">pos</span>();</span><br><span class="line">        <span class="comment">//或者</span></span><br><span class="line">        <span class="comment">//mouseLocalPos=e-&gt;globalPos()-this-&gt;frameGeometry().topLeft();</span></span><br><span class="line">        <span class="built_in">qDebug</span>()&lt;&lt;<span class="string">"点击本地坐标:("</span>&lt;&lt;mouseLocalPos.<span class="built_in">x</span>()&lt;&lt;<span class="string">","</span>&lt;&lt;mouseLocalPos.<span class="built_in">y</span>()&lt;&lt;<span class="string">")"</span>;</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">//鼠标追踪默认是关闭的，只有在鼠标按下且移动的时候才会触发鼠标移动事件</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">MyWidget::mouseMoveEvent</span><span class="params">(QMouseEvent* e)</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">        QPoint newLeftPos;  <span class="comment">//窗口移动距离</span></span><br><span class="line">        newLeftPos=e-&gt;<span class="built_in">globalPos</span>()-mouseLocalPos;</span><br><span class="line">        <span class="keyword">this</span>-&gt;<span class="built_in">move</span>(newLeftPos);</span><br><span class="line">        <span class="built_in">qDebug</span>()&lt;&lt;<span class="string">"窗口左上角全局坐标:("</span>&lt;&lt;newLeftPos.<span class="built_in">x</span>()&lt;&lt;<span class="string">","</span>&lt;&lt;newLeftPos.<span class="built_in">y</span>()&lt;&lt;<span class="string">")"</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Jia Qiang
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/2021/04/24/QT%E4%B8%8D%E8%A7%84%E5%88%99%E7%AA%97%E5%8F%A3%E7%9A%84%E7%A7%BB%E5%8A%A8%E5%8E%9F%E7%90%86%E5%92%8C%E8%AF%81%E6%98%8E/" title="QT不规则窗口的移动原理和证明">http://example.com/2021/04/24/QT不规则窗口的移动原理和证明/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-ZN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/04/24/%E6%8E%92%E5%BA%8F/" rel="prev" title="“排序”">
+      <i class="fa fa-chevron-left"></i> “排序”
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1%E3%80%81%E8%AE%BE%E7%BD%AE%E7%AA%97%E5%8F%A3%E6%97%A0%E8%BE%B9%E6%A1%86%E4%B8%94%E8%83%8C%E6%99%AF%E9%80%8F%E6%98%8E"><span class="nav-text">1、设置窗口无边框且背景透明</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2%E3%80%81%E4%BD%BF%E7%94%A8%E8%83%8C%E6%99%AF%E9%80%8F%E6%98%8E%E5%9B%BE%E7%89%87%E5%A1%AB%E5%85%85%E7%AA%97%E5%8F%A3"><span class="nav-text">2、使用背景透明图片填充窗口</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3%E3%80%81%E9%BC%A0%E6%A0%87%E6%8C%89%E4%B8%8B%E6%8B%96%E6%8B%BD%E4%B8%8D%E8%A7%84%E5%88%99%E7%AA%97%E5%8F%A3%E8%AF%81%E6%98%8E"><span class="nav-text">3、鼠标按下拖拽不规则窗口证明</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-%E9%BC%A0%E6%A0%87%E7%A7%BB%E5%8A%A8%E4%B8%8E%E9%BC%A0%E6%A0%87%E8%BF%BD%E8%B8%AA"><span class="nav-text">3.1 鼠标移动与鼠标追踪</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-%E7%AA%97%E5%8F%A3%E7%A7%BB%E5%8A%A8%E5%8E%9F%E7%90%86%E4%BB%A5%E8%AF%81%E6%98%8E"><span class="nav-text">3.2 窗口移动原理以证明</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4%E3%80%81%E5%AE%8C%E6%95%B4%E4%BB%A3%E7%A0%81"><span class="nav-text">4、完整代码</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jia Qiang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/CodeBreeze1024" title="Github → https:&#x2F;&#x2F;github.com&#x2F;CodeBreeze1024" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>Github</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:qiangjia2021@qq.com" title="E-Mail → mailto:qiangjia2021@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-ZN" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jia Qiang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script src="/js/cursor/fireworks.js"></script>
+  
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>
